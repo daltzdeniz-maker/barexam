@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PH Bar Review â€” 2025-Style Practice</title>
+<title>PH Bar Review - 2025-Style Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -679,11 +679,11 @@
 
 <header>
   <div class="header-inner">
-    <div class="header-eyebrow">Integrated Bar of the Philippines Â· Bar Exam Review</div>
+    <div class="header-eyebrow">Integrated Bar of the Philippines - Bar Exam Review</div>
     <h1>Philippine Bar<br><span>Practice Examinations</span></h1>
-    <p class="header-sub">Groq-generated hypotheticals modeled on the 2025 Philippine Bar questionnaire style Â· Instant answer analysis</p>
+    <p class="header-sub">Groq-generated hypotheticals modeled on the 2025 Philippine Bar questionnaire style - Instant answer analysis</p>
     <button onclick="showApiKeyModal()" class="key-status" id="key-status">No API key</button>
-    <div class="header-flags" aria-hidden="true">âš–ï¸ðŸ‡µðŸ‡­</div>
+    <div class="header-flags" aria-hidden="true">LAW PH</div>
   </div>
 </header>
 
@@ -719,7 +719,7 @@
       </div>
       <div class="stat-row">
         <span class="stat-label">Score rate</span>
-        <span class="stat-value" id="stat-rate">â€”</span>
+        <span class="stat-value" id="stat-rate">-</span>
       </div>
     </div>
 
@@ -775,7 +775,7 @@
       </div>
       <div class="question-body" id="question-body">
         <div class="empty-state">
-          <div class="empty-state-icon">âš–ï¸</div>
+          <div class="empty-state-icon">LAW</div>
           <h2>Ready when you are</h2>
           <p>Click <strong>Generate Question</strong> to receive a fresh 2025-style bar exam hypothetical.</p>
           <button class="btn-new" onclick="generateQuestion()" style="margin: 0 auto;">
@@ -973,7 +973,7 @@ Respond ONLY with a JSON object in this exact format:
 
       renderQuestion(qData);
       document.getElementById('answer-section').style.display = 'block';
-      document.getElementById('badge-type').textContent = 'Essay Â· ' + (qData.topic || state.subject);
+      document.getElementById('badge-type').textContent = 'Essay - ' + (qData.topic || state.subject);
 
     } catch (err) {
       document.getElementById('question-body').innerHTML = `
@@ -1096,13 +1096,13 @@ Evaluate the examinee's answer.`;
 
     const strengthsHTML = (result.strengths || []).map(s => `
       <div class="key-point">
-        <div class="key-point-icon icon-check">âœ“</div>
+        <div class="key-point-icon icon-check">OK</div>
         <span>${escapeHTML(s)}</span>
       </div>`).join('');
 
     const weaknessesHTML = (result.weaknesses || []).map(w => `
       <div class="key-point">
-        <div class="key-point-icon icon-cross">âœ—</div>
+        <div class="key-point-icon icon-cross">X</div>
         <span>${escapeHTML(w)}</span>
       </div>`).join('');
 
@@ -1165,7 +1165,7 @@ Evaluate the examinee's answer.`;
   function updateStats() {
     document.getElementById('stat-attempted').textContent = state.attempted;
     document.getElementById('stat-excellent').textContent = state.excellent;
-    const rate = state.attempted > 0 ? Math.round(state.totalScore / state.attempted) + '%' : 'â€”';
+    const rate = state.attempted > 0 ? Math.round(state.totalScore / state.attempted) + '%' : '-';
     document.getElementById('stat-rate').textContent = rate;
     const pct = state.attempted > 0 ? Math.round((state.excellent / state.attempted) * 100) : 0;
     document.getElementById('progress-bar').style.width = pct + '%';
