@@ -893,76 +893,47 @@
     document.getElementById('feedback-section').innerHTML = '';
   }
 
-  // API key management
-  let apiKey = localStorage.getItem('ph_bar_gemini_key') || 'AQ.Ab8RN6I9loxJQyXm5arNbEymu81r0JArvoJBYYX8WXQCoN_lGQ';
+  // Groq API (hardcoded — free tier)
+  const GROQ_API_KEY = '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';
 
   function updateKeyStatus() {
     const el = document.getElementById('key-status');
-    if (apiKey) {
-      el.textContent = '● Gemini key saved';
-      el.style.color = 'var(--green-correct)';
-    } else {
-      el.textContent = '● No API key — click to add';
-      el.style.color = 'var(--red-wrong)';
-    }
+    el.textContent = '● Groq AI active';
+    el.style.color = 'var(--green-correct)';
   }
 
-  function showApiKeyModal() {
-    document.getElementById('api-key-modal').style.display = 'flex';
-    document.getElementById('api-key-input').value = apiKey;
-    setTimeout(() => document.getElementById('api-key-input').focus(), 50);
-  }
+  function showApiKeyModal() {}
+  function closeApiKeyModal() {}
+  function submitApiKey() {}
 
-  function closeApiKeyModal() {
-    document.getElementById('api-key-modal').style.display = 'none';
-  }
-
-  function submitApiKey() {
-    const val = document.getElementById('api-key-input').value.trim();
-    if (!val || val.length < 20) {
-      showToast('Please enter a valid Gemini API key.');
-      return;
-    }
-    apiKey = val;
-    localStorage.setItem('ph_bar_gemini_key', apiKey);
-    updateKeyStatus();
-    closeApiKeyModal();
-    showToast('API key saved!');
-  }
-
-  // Gemini API call helper
+  // Groq API call helper
   async function callClaude(messages, systemPrompt) {
-    if (!apiKey) { showApiKeyModal(); throw new Error('No API key set.'); }
-
-    // Build Gemini contents from messages
-    const contents = messages.map(m => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
-    }));
-
-    const body = {
-      system_instruction: { parts: [{ text: systemPrompt }] },
-      contents: contents,
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2048,
-      }
+    const payload = {
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...messages
+      ],
+      temperature: 0.7,
+      max_tokens: 2048,
     };
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    const response = await fetch(url, {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + GROQ_API_KEY,
+      },
+      body: JSON.stringify(payload)
     });
 
-    if (response.status === 400) { throw new Error('Bad request — check your prompt or API key.'); }
-    if (response.status === 403 || response.status === 401) { showApiKeyModal(); throw new Error('Invalid API key (403). Please re-enter your Gemini key.'); }
+    if (response.status === 401) throw new Error('Invalid Groq API key (401).');
+    if (response.status === 429) throw new Error('Rate limit reached. Please wait a moment and try again.');
     if (!response.ok) throw new Error('API request failed: ' + response.status);
 
     const data = await response.json();
     if (data.error) throw new Error(data.error.message);
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    return data.choices?.[0]?.message?.content || '';
   }
 
   // Generate question
@@ -1239,36 +1210,9 @@ Evaluate the examinee's answer.`;
   }
 </script>
 
-<!-- API Key Modal -->
-<div id="api-key-modal" style="display:none; position:fixed; inset:0; background:rgba(26,18,8,0.6); z-index:1000; align-items:center; justify-content:center; padding:1rem;">
-  <div style="background:var(--cream); border:1px solid var(--gold-border); border-radius:12px; padding:2rem; max-width:500px; width:100%; box-shadow:0 8px 40px rgba(26,18,8,0.25);">
-    <h2 style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--ink); margin-bottom:0.5rem;">Enter Google Gemini API Key</h2>
-    <p style="font-size:0.82rem; color:var(--ink-soft); line-height:1.65; margin-bottom:0.75rem;">
-      Gemini is <strong style="color:var(--ink)">free</strong> — no credit card required. Get your key in 30 seconds:
-    </p>
-    <ol style="font-size:0.82rem; color:var(--ink-soft); line-height:1.8; margin-bottom:1rem; padding-left:1.25rem;">
-      <li>Go to <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue-ph); font-weight:600;">aistudio.google.com/app/apikey</a></li>
-      <li>Sign in with your Google account</li>
-      <li>Click <strong style="color:var(--ink)">"Create API key"</strong></li>
-      <li>Copy and paste it below</li>
-    </ol>
-    <input id="api-key-input" type="password" placeholder="AIza…"
-      style="width:100%; padding:0.65rem 0.9rem; font-family:'JetBrains Mono',monospace; font-size:0.82rem; border:1px solid var(--gold-border); border-radius:6px; background:white; color:var(--ink); margin-bottom:1rem; outline:none;"
-      onkeydown="if(event.key==='Enter') submitApiKey();"
-    />
-    <p style="font-size:0.75rem; color:var(--ink-soft); margin-bottom:1rem; font-style:italic;">Your key is saved only in your browser and sent directly to Google. It is never stored on any server.</p>
-    <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
-      <button onclick="closeApiKeyModal()" style="font-family:'Source Serif 4',serif; font-size:0.85rem; padding:0.55rem 1.1rem; background:none; border:1px solid var(--parchment); border-radius:6px; cursor:pointer; color:var(--ink-soft);">Cancel</button>
-      <button onclick="submitApiKey()" style="font-family:'Source Serif 4',serif; font-size:0.85rem; font-weight:600; padding:0.55rem 1.4rem; background:var(--ink); color:var(--gold-pale); border:none; border-radius:6px; cursor:pointer;">Save Key</button>
-    </div>
-  </div>
-</div>
+<!-- Groq API hardcoded — no key modal needed -->
 
-<script>
-  updateKeyStatus();
-  // Key is hardcoded — only show modal if somehow missing
-  if (!apiKey) showApiKeyModal();
-</script>
+<script>updateKeyStatus();</script>
 
 </body>
 </html>
