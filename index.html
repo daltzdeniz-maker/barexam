@@ -716,6 +716,7 @@
     <div class="header-eyebrow">Integrated Bar of the Philippines · Bar Exam Review</div>
     <h1>Philippine Bar<br><span>Practice Examinations</span></h1>
     <p class="header-sub">AI-generated scenarios based on past bar examinations · Instant answer analysis</p>
+    <button onclick="showApiKeyModal()" style="position:absolute; top:1rem; right:2rem; font-family:'JetBrains Mono',monospace; font-size:0.72rem; background:rgba(255,255,255,0.08); border:1px solid rgba(184,134,11,0.3); color:var(--gold-pale); padding:4px 12px; border-radius:99px; cursor:pointer;" id="key-status">● No API key</button>
     <div class="header-flags">⚖️🇵🇭</div>
   </div>
 </header>
@@ -892,12 +893,52 @@
     document.getElementById('feedback-section').innerHTML = '';
   }
 
+  // API key management
+  let apiKey = localStorage.getItem('ph_bar_api_key') || '';
+
+  function updateKeyStatus() {
+    const el = document.getElementById('key-status');
+    if (apiKey) {
+      el.textContent = '● Key saved';
+      el.style.color = 'var(--green-correct)';
+    } else {
+      el.textContent = '● No API key — click to add';
+      el.style.color = 'var(--red-wrong)';
+    }
+  }
+
+  function showApiKeyModal() {
+    document.getElementById('api-key-modal').style.display = 'flex';
+    document.getElementById('api-key-input').value = apiKey;
+    setTimeout(() => document.getElementById('api-key-input').focus(), 50);
+  }
+
+  function closeApiKeyModal() {
+    document.getElementById('api-key-modal').style.display = 'none';
+  }
+
+  function submitApiKey() {
+    const val = document.getElementById('api-key-input').value.trim();
+    if (!val.startsWith('sk-ant-')) {
+      showToast('Invalid key — should start with sk-ant-');
+      return;
+    }
+    apiKey = val;
+    localStorage.setItem('ph_bar_api_key', apiKey);
+    updateKeyStatus();
+    closeApiKeyModal();
+    showToast('API key saved!');
+  }
+
   // API call helper
   async function callClaude(messages, systemPrompt) {
+    if (!apiKey) { showApiKeyModal(); throw new Error('No API key set.'); }
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
@@ -907,6 +948,7 @@
         messages: messages,
       })
     });
+    if (response.status === 401) { showApiKeyModal(); throw new Error('Invalid API key (401). Please re-enter your key.'); }
     if (!response.ok) throw new Error('API request failed: ' + response.status);
     const data = await response.json();
     return data.content.map(b => b.text || '').join('');
@@ -1185,5 +1227,30 @@ Evaluate the examinee's answer.`;
     setTimeout(() => toast.remove(), 3000);
   }
 </script>
+
+<!-- API Key Modal -->
+<div id="api-key-modal" style="display:none; position:fixed; inset:0; background:rgba(26,18,8,0.6); z-index:1000; align-items:center; justify-content:center; padding:1rem;">
+  <div style="background:var(--cream); border:1px solid var(--gold-border); border-radius:12px; padding:2rem; max-width:480px; width:100%; box-shadow:0 8px 40px rgba(26,18,8,0.25);">
+    <h2 style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--ink); margin-bottom:0.5rem;">Enter Anthropic API Key</h2>
+    <p style="font-size:0.82rem; color:var(--ink-soft); line-height:1.6; margin-bottom:1.25rem;">
+      Your key is stored only in your browser's localStorage and never sent anywhere except directly to Anthropic's API.
+      Get your key at <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--blue-ph);">console.anthropic.com</a>.
+    </p>
+    <input id="api-key-input" type="password" placeholder="sk-ant-api03-…"
+      style="width:100%; padding:0.65rem 0.9rem; font-family:'JetBrains Mono',monospace; font-size:0.82rem; border:1px solid var(--gold-border); border-radius:6px; background:white; color:var(--ink); margin-bottom:1rem; outline:none;"
+      onkeydown="if(event.key==='Enter') submitApiKey();"
+    />
+    <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+      <button onclick="closeApiKeyModal()" style="font-family:'Source Serif 4',serif; font-size:0.85rem; padding:0.55rem 1.1rem; background:none; border:1px solid var(--parchment); border-radius:6px; cursor:pointer; color:var(--ink-soft);">Cancel</button>
+      <button onclick="submitApiKey()" style="font-family:'Source Serif 4',serif; font-size:0.85rem; font-weight:600; padding:0.55rem 1.4rem; background:var(--ink); color:var(--gold-pale); border:none; border-radius:6px; cursor:pointer;">Save Key</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  updateKeyStatus();
+  if (!apiKey) showApiKeyModal();
+</script>
+
 </body>
 </html>
