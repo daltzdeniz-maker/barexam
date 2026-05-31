@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PH Bar Review — Practice Examinations</title>
+<title>PH Bar Review â€” 2025-Style Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -21,9 +21,7 @@
     --red-ph: #8B0000;
     --blue-ph: #0033A0;
     --green-correct: #1B5E20;
-    --green-bg: #E8F5E9;
     --red-wrong: #B71C1C;
-    --red-bg: #FFEBEE;
     --shadow: rgba(26, 18, 8, 0.12);
   }
 
@@ -39,11 +37,9 @@
       radial-gradient(ellipse at 80% 100%, rgba(139,0,0,0.05) 0%, transparent 60%);
   }
 
-  /* Header */
   header {
     background: var(--ink);
     color: var(--gold-pale);
-    padding: 0;
     border-bottom: 3px solid var(--gold);
     position: relative;
     overflow: hidden;
@@ -87,15 +83,27 @@
     margin-bottom: 0.4rem;
   }
 
-  header h1 span {
-    color: var(--gold);
-  }
+  header h1 span { color: var(--gold); }
 
   .header-sub {
     font-size: 0.9rem;
-    color: rgba(253,246,227,0.6);
+    color: rgba(253,246,227,0.65);
     font-weight: 300;
     font-style: italic;
+  }
+
+  .key-status {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(184,134,11,0.3);
+    color: var(--gold-pale);
+    padding: 4px 12px;
+    border-radius: 99px;
+    cursor: pointer;
   }
 
   .header-flags {
@@ -107,9 +115,9 @@
     gap: 4px;
     opacity: 0.4;
     font-size: 2rem;
+    pointer-events: none;
   }
 
-  /* Nav tabs */
   .subject-nav {
     background: var(--ink-mid);
     border-bottom: 1px solid rgba(184,134,11,0.3);
@@ -138,7 +146,6 @@
     cursor: pointer;
     white-space: nowrap;
     transition: color 0.2s, border-color 0.2s;
-    letter-spacing: 0.01em;
   }
 
   .subject-btn:hover { color: var(--gold-pale); }
@@ -149,7 +156,6 @@
     font-weight: 600;
   }
 
-  /* Main layout */
   main {
     max-width: 960px;
     margin: 0 auto;
@@ -163,20 +169,25 @@
   @media (max-width: 700px) {
     main { grid-template-columns: 1fr; padding: 1rem; }
     .sidebar { display: none; }
+    .header-flags { display: none; }
+    .key-status { position: static; margin-top: 0.85rem; }
   }
 
-  /* Sidebar */
-  .sidebar {
-    position: sticky;
-    top: 1.5rem;
-  }
+  .sidebar { position: sticky; top: 1.5rem; }
 
-  .sidebar-card {
+  .sidebar-card,
+  .question-card,
+  .feedback-card {
     background: white;
     border: 1px solid var(--gold-border);
     border-radius: 8px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .sidebar-card {
     padding: 1.25rem;
     margin-bottom: 1rem;
+    box-shadow: none;
   }
 
   .sidebar-card h3 {
@@ -195,16 +206,16 @@
     align-items: center;
     margin-bottom: 0.6rem;
     font-size: 0.82rem;
+    gap: 1rem;
   }
 
   .stat-label { color: var(--ink-soft); }
-
   .stat-value {
     font-family: 'JetBrains Mono', monospace;
     font-weight: 500;
     color: var(--ink);
+    text-align: right;
   }
-
   .stat-value.gold { color: var(--gold); }
   .stat-value.green { color: var(--green-correct); }
 
@@ -237,11 +248,20 @@
 
   .ref-link:last-child { border-bottom: none; }
   .ref-link:hover { color: var(--ink); }
-
   .ref-link svg { flex-shrink: 0; opacity: 0.6; }
 
-  /* Question area */
-  .question-area {}
+  .instructions {
+    background: linear-gradient(135deg, var(--gold-pale), white);
+    border: 1px solid var(--gold-border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--ink-mid);
+  }
+
+  .instructions strong { color: var(--ink); }
 
   .question-header {
     display: flex;
@@ -267,49 +287,40 @@
     letter-spacing: 0.04em;
   }
 
-  .badge-subject {
-    background: var(--ink);
-    color: var(--gold);
-  }
+  .badge-subject { background: var(--ink); color: var(--gold); }
+  .badge-year { background: var(--cream-dark); color: var(--ink-soft); }
+  .badge-type { background: rgba(0,51,160,0.1); color: var(--blue-ph); }
 
-  .badge-year {
-    background: var(--cream-dark);
-    color: var(--ink-soft);
-  }
-
-  .badge-type {
-    background: rgba(0,51,160,0.1);
-    color: var(--blue-ph);
+  .btn-new,
+  .btn-submit,
+  .btn-outline {
+    font-family: 'Source Serif 4', serif;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, border-color 0.15s, color 0.15s;
   }
 
   .btn-new {
-    font-family: 'Source Serif 4', serif;
     font-size: 0.82rem;
     padding: 0.45rem 1.1rem;
     background: var(--gold);
     color: var(--ink);
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
     font-weight: 600;
-    transition: background 0.15s, transform 0.1s;
     display: flex;
     align-items: center;
     gap: 6px;
   }
 
   .btn-new:hover { background: var(--gold-light); }
-  .btn-new:active { transform: scale(0.97); }
-  .btn-new:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-new:active,
+  .btn-submit:active { transform: scale(0.97); }
+  .btn-new:disabled,
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* Question card */
   .question-card {
-    background: white;
-    border: 1px solid var(--gold-border);
-    border-radius: 10px;
     overflow: hidden;
     margin-bottom: 1.25rem;
-    box-shadow: 0 2px 12px var(--shadow);
   }
 
   .question-card-header {
@@ -329,9 +340,7 @@
     text-transform: uppercase;
   }
 
-  .question-body {
-    padding: 1.5rem;
-  }
+  .question-body { padding: 1.5rem; }
 
   .scenario-text {
     font-size: 0.95rem;
@@ -368,7 +377,7 @@
   }
 
   .question-subparts li::before {
-    content: "(" counter(qpart, lower-alpha) ")";
+    content: counter(qpart) ".";
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.78rem;
     color: var(--gold);
@@ -376,7 +385,6 @@
     padding-top: 2px;
   }
 
-  /* Skeleton loader */
   @keyframes shimmer {
     0% { background-position: -600px 0; }
     100% { background-position: 600px 0; }
@@ -389,12 +397,8 @@
     border-radius: 4px;
   }
 
-  .skeleton-line {
-    height: 14px;
-    margin-bottom: 10px;
-  }
+  .skeleton-line { height: 14px; margin-bottom: 10px; }
 
-  /* Answer area */
   .answer-section { margin-bottom: 1.25rem; }
 
   .answer-section label {
@@ -429,7 +433,11 @@
     box-shadow: 0 0 0 3px rgba(184,134,11,0.12);
   }
 
-  .answer-textarea::placeholder { color: var(--ink-soft); opacity: 0.5; font-style: italic; }
+  .answer-textarea::placeholder {
+    color: var(--ink-soft);
+    opacity: 0.5;
+    font-style: italic;
+  }
 
   .answer-actions {
     display: flex;
@@ -438,45 +446,33 @@
   }
 
   .btn-submit {
-    font-family: 'Source Serif 4', serif;
     font-size: 0.88rem;
     font-weight: 600;
     padding: 0.6rem 1.6rem;
     background: var(--ink);
     color: var(--gold-pale);
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
   }
 
   .btn-submit:hover { background: var(--ink-mid); }
-  .btn-submit:active { transform: scale(0.97); }
-  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .btn-outline {
-    font-family: 'Source Serif 4', serif;
     font-size: 0.88rem;
     padding: 0.6rem 1.2rem;
     background: none;
     color: var(--ink-soft);
     border: 1px solid var(--parchment);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
   }
 
-  .btn-outline:hover { border-color: var(--gold-border); color: var(--ink); }
+  .btn-outline:hover {
+    border-color: var(--gold-border);
+    color: var(--ink);
+  }
 
-  /* Feedback card */
   .feedback-card {
-    background: white;
-    border: 1px solid var(--gold-border);
-    border-radius: 10px;
     overflow: hidden;
     margin-bottom: 1.25rem;
     animation: fadeUp 0.35s ease;
-    box-shadow: 0 2px 12px var(--shadow);
   }
 
   @keyframes fadeUp {
@@ -522,14 +518,8 @@
   .score-pill.partial { background: #FFECB3; color: #E65100; }
   .score-pill.poor { background: #FFCDD2; color: var(--red-wrong); }
 
-  .feedback-body {
-    padding: 1.5rem;
-  }
-
-  .feedback-section {
-    margin-bottom: 1.25rem;
-  }
-
+  .feedback-body { padding: 1.5rem; }
+  .feedback-section { margin-bottom: 1.25rem; }
   .feedback-section:last-child { margin-bottom: 0; }
 
   .feedback-section-title {
@@ -557,8 +547,6 @@
     color: var(--ink);
   }
 
-  .feedback-text strong { color: var(--ink-mid); }
-
   .key-point {
     display: flex;
     gap: 10px;
@@ -584,7 +572,6 @@
 
   .icon-check { background: #C8E6C9; color: var(--green-correct); }
   .icon-cross { background: #FFCDD2; color: var(--red-wrong); }
-  .icon-warn { background: #FFECB3; color: #E65100; }
 
   .model-answer {
     background: var(--cream);
@@ -607,7 +594,6 @@
     margin: 0 2px;
   }
 
-  /* Loading spinner */
   .loading-wrap {
     display: flex;
     align-items: center;
@@ -618,9 +604,7 @@
     font-style: italic;
   }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .spinner {
     width: 18px;
@@ -632,7 +616,6 @@
     flex-shrink: 0;
   }
 
-  /* Empty / welcome state */
   .empty-state {
     text-align: center;
     padding: 3rem 2rem;
@@ -660,7 +643,6 @@
     margin: 0 auto 1.25rem;
   }
 
-  /* Toast */
   .toast {
     position: fixed;
     bottom: 1.5rem;
@@ -680,7 +662,6 @@
     to { transform: translateY(0); opacity: 1; }
   }
 
-  /* Word count */
   .word-count {
     text-align: right;
     font-family: 'JetBrains Mono', monospace;
@@ -689,21 +670,6 @@
     margin-top: 0.35rem;
   }
 
-  /* Instructions banner */
-  .instructions {
-    background: linear-gradient(135deg, var(--gold-pale), white);
-    border: 1px solid var(--gold-border);
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1.25rem;
-    font-size: 0.85rem;
-    line-height: 1.7;
-    color: var(--ink-mid);
-  }
-
-  .instructions strong { color: var(--ink); }
-
-  /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--gold-border); border-radius: 99px; }
@@ -713,29 +679,26 @@
 
 <header>
   <div class="header-inner">
-    <div class="header-eyebrow">Integrated Bar of the Philippines · Bar Exam Review</div>
+    <div class="header-eyebrow">Integrated Bar of the Philippines Â· Bar Exam Review</div>
     <h1>Philippine Bar<br><span>Practice Examinations</span></h1>
-    <p class="header-sub">AI-generated scenarios based on past bar examinations · Instant answer analysis</p>
-    <button onclick="showApiKeyModal()" style="position:absolute; top:1rem; right:2rem; font-family:'JetBrains Mono',monospace; font-size:0.72rem; background:rgba(255,255,255,0.08); border:1px solid rgba(184,134,11,0.3); color:var(--gold-pale); padding:4px 12px; border-radius:99px; cursor:pointer;" id="key-status">● No API key</button>
-    <div class="header-flags">⚖️🇵🇭</div>
+    <p class="header-sub">Groq-generated hypotheticals modeled on the 2025 Philippine Bar questionnaire style Â· Instant answer analysis</p>
+    <button onclick="showApiKeyModal()" class="key-status" id="key-status">No API key</button>
+    <div class="header-flags" aria-hidden="true">âš–ï¸ðŸ‡µðŸ‡­</div>
   </div>
 </header>
 
 <nav class="subject-nav" aria-label="Subject areas">
   <div class="subject-nav-inner">
-    <button class="subject-btn active" data-subject="Political Law">Political Law</button>
-    <button class="subject-btn" data-subject="Labor Law">Labor Law</button>
+    <button class="subject-btn active" data-subject="Political and Public International Law">Political and Public International Law</button>
+    <button class="subject-btn" data-subject="Commercial and Taxation Laws">Commercial and Taxation Laws</button>
     <button class="subject-btn" data-subject="Civil Law">Civil Law</button>
-    <button class="subject-btn" data-subject="Taxation">Taxation</button>
-    <button class="subject-btn" data-subject="Mercantile Law">Mercantile Law</button>
+    <button class="subject-btn" data-subject="Labor Law and Social Legislations">Labor Law and Social Legislations</button>
     <button class="subject-btn" data-subject="Criminal Law">Criminal Law</button>
-    <button class="subject-btn" data-subject="Remedial Law">Remedial Law</button>
-    <button class="subject-btn" data-subject="Legal Ethics">Legal Ethics</button>
+    <button class="subject-btn" data-subject="Remedial Law, Legal and Judicial Ethics with Practical Exercises">Remedial Law, Legal and Judicial Ethics</button>
   </div>
 </nav>
 
 <main>
-  <!-- Sidebar -->
   <aside class="sidebar" aria-label="Session statistics and references">
     <div class="sidebar-card">
       <h3>Session Statistics</h3>
@@ -749,19 +712,23 @@
       </div>
       <div class="stat-row">
         <span class="stat-label">Current subject</span>
-        <span class="stat-value gold" id="stat-subject">Political Law</span>
+        <span class="stat-value gold" id="stat-subject">Political and Public International Law</span>
       </div>
       <div class="progress-bar-wrap" aria-hidden="true">
         <div class="progress-bar" id="progress-bar" style="width:0%"></div>
       </div>
       <div class="stat-row">
         <span class="stat-label">Score rate</span>
-        <span class="stat-value" id="stat-rate">—</span>
+        <span class="stat-value" id="stat-rate">â€”</span>
       </div>
     </div>
 
     <div class="sidebar-card">
       <h3>Past Bar References</h3>
+      <a class="ref-link" href="https://sc.judiciary.gov.ph/bar-2025/" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Supreme Court BAR 2025 Questionnaires
+      </a>
       <a class="ref-link" href="https://www.sc.judiciary.gov.ph/bar-matters/" target="_blank" rel="noopener">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Supreme Court Bar Matters
@@ -770,10 +737,6 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         LawPhil Bar Questions Archive
       </a>
-      <a class="ref-link" href="https://www.chanrobles.com/barexaminations.htm" target="_blank" rel="noopener">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Chan Robles Bar Exams
-      </a>
       <a class="ref-link" href="https://www.officialgazette.gov.ph" target="_blank" rel="noopener">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Official Gazette PH
@@ -781,24 +744,22 @@
     </div>
 
     <div class="sidebar-card">
-      <h3>Exam Tips</h3>
+      <h3>2025 Style Notes</h3>
       <p style="font-size:0.8rem; line-height:1.7; color:var(--ink-soft);">
-        Bar answers should cite applicable laws, relevant jurisprudence, and apply the IRAC method: <strong style="color:var(--ink-mid)">Issue, Rule, Application, Conclusion</strong>.
+        Questions are short hypotheticals with one controlling issue and prompts such as <strong style="color:var(--ink-mid)">Is X correct? Reason(s).</strong> or <strong style="color:var(--ink-mid)">Decide with reason(s).</strong>
       </p>
     </div>
   </aside>
 
-  <!-- Main content -->
   <section aria-label="Exam question and answer">
     <div class="instructions">
-      <strong>How to use:</strong> Select a subject above, then click <em>Generate Question</em> to receive a scenario based on past Philippine Bar Examinations. Write your answer using proper legal reasoning (IRAC method), then submit for AI-powered analysis and feedback.
+      <strong>How to use:</strong> Select a 2025 Bar subject above, then click <em>Generate Question</em>. Groq will create a fresh hypothetical that imitates the way the 2025 Philippine Bar questions were asked: compact facts, exam-style parties, one main legal issue, and a direct call to answer with reasons.
     </div>
 
-    <!-- Question controls -->
     <div class="question-header">
       <div class="question-meta">
-        <span class="badge badge-subject" id="badge-subject">Political Law</span>
-        <span class="badge badge-year" id="badge-year">—</span>
+        <span class="badge badge-subject" id="badge-subject">Political and Public International Law</span>
+        <span class="badge badge-year" id="badge-year">2025-style</span>
         <span class="badge badge-type" id="badge-type">Essay</span>
       </div>
       <button class="btn-new" id="btn-generate" onclick="generateQuestion()">
@@ -807,7 +768,6 @@
       </button>
     </div>
 
-    <!-- Question display -->
     <div class="question-card" id="question-card">
       <div class="question-card-header">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gold-light)"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -815,9 +775,9 @@
       </div>
       <div class="question-body" id="question-body">
         <div class="empty-state">
-          <div class="empty-state-icon">⚖️</div>
+          <div class="empty-state-icon">âš–ï¸</div>
           <h2>Ready when you are</h2>
-          <p>Click <strong>Generate Question</strong> to receive a bar exam scenario. Questions are crafted in the style of actual Philippine Bar Examinations.</p>
+          <p>Click <strong>Generate Question</strong> to receive a fresh 2025-style bar exam hypothetical.</p>
           <button class="btn-new" onclick="generateQuestion()" style="margin: 0 auto;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             Start Practicing
@@ -826,7 +786,6 @@
       </div>
     </div>
 
-    <!-- Answer section (hidden until question loads) -->
     <div id="answer-section" style="display:none;">
       <div class="question-card">
         <div class="question-card-header">
@@ -839,7 +798,7 @@
             <textarea
               class="answer-textarea"
               id="answer-input"
-              placeholder="Apply the IRAC method: State the Issue, cite the applicable Rule (law/jurisprudence), Apply it to the facts, then state your Conclusion..."
+              placeholder="Answer directly, state the controlling rule, apply it to the facts, and conclude with reasons."
               oninput="updateWordCount()"
             ></textarea>
             <div class="word-count" id="word-count">0 words</div>
@@ -853,15 +812,13 @@
       </div>
     </div>
 
-    <!-- Feedback section -->
     <div id="feedback-section"></div>
   </section>
 </main>
 
 <script>
-  // State
   const state = {
-    subject: 'Political Law',
+    subject: 'Political and Public International Law',
     currentQuestion: null,
     modelAnswer: null,
     attempted: 0,
@@ -869,7 +826,6 @@
     totalScore: 0,
   };
 
-  // Subject navigation
   document.querySelectorAll('.subject-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
@@ -880,7 +836,16 @@
     });
   });
 
-  // Word count
+  function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;',
+    }[char]));
+  }
+
   function updateWordCount() {
     const text = document.getElementById('answer-input').value.trim();
     const words = text ? text.split(/\s+/).length : 0;
@@ -893,12 +858,11 @@
     document.getElementById('feedback-section').innerHTML = '';
   }
 
-  // Groq API (hardcoded — free tier)
   const GROQ_API_KEY = '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';
 
   function updateKeyStatus() {
     const el = document.getElementById('key-status');
-    el.textContent = '● Groq AI active';
+    el.textContent = 'Groq AI active';
     el.style.color = 'var(--green-correct)';
   }
 
@@ -906,16 +870,16 @@
   function closeApiKeyModal() {}
   function submitApiKey() {}
 
-  // Groq API call helper
-  async function callClaude(messages, systemPrompt) {
+  async function callGroq(messages, systemPrompt) {
     const payload = {
       model: 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages
       ],
-      temperature: 0.7,
+      temperature: 0.72,
       max_tokens: 2048,
+      response_format: { type: 'json_object' },
     };
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -936,21 +900,24 @@
     return data.choices?.[0]?.message?.content || '';
   }
 
-  // Generate question
+  function parseJSONResponse(raw) {
+    const cleaned = raw.replace(/```json|```/g, '').trim();
+    return JSON.parse(cleaned);
+  }
+
   async function generateQuestion() {
     const btn = document.getElementById('btn-generate');
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;"></div> Generating...';
 
     document.getElementById('feedback-section').innerHTML = '';
-    document.getElementById('answer-input') && (document.getElementById('answer-input').value = '');
+    if (document.getElementById('answer-input')) document.getElementById('answer-input').value = '';
     document.getElementById('answer-section').style.display = 'none';
 
-    // Show loading skeleton
     document.getElementById('question-body').innerHTML = `
       <div class="loading-wrap">
         <div class="spinner"></div>
-        <span>Drafting examination question based on past bar exams…</span>
+        <span>Drafting a fresh hypothetical in the BAR 2025 question style...</span>
       </div>
       <div style="padding: 0 1.5rem 1.5rem;">
         <div class="skeleton skeleton-line" style="width:90%"></div>
@@ -962,50 +929,57 @@
       </div>
     `;
 
-    const yearRef = [2018, 2019, 2020, 2021, 2022, 2023][Math.floor(Math.random() * 6)];
-    document.getElementById('badge-year').textContent = yearRef + '-style';
+    document.getElementById('badge-year').textContent = '2025-style';
     document.getElementById('badge-subject').textContent = state.subject;
 
     try {
-      const systemPrompt = `You are an expert Philippine Bar Examination question writer with deep knowledge of Philippine law, jurisprudence, and the format of actual bar exams administered by the Supreme Court of the Philippines.
+      const systemPrompt = `You are an expert Philippine Bar Examination question writer and Philippine law professor.
 
-Generate questions that:
-1. Follow the exact format of actual Philippine Bar Exam questions (scenario-based essay problems)
-2. Reference realistic Filipino names, places, and situations
-3. Test application of the law, not just memorization
-4. Include a fact pattern (scenario) and 2-3 specific questions
-5. Are based on actual areas tested in recent bar examinations (${yearRef} style)
-6. Reference current statutes, the Civil Code, Revised Penal Code, Constitution, Rules of Court, etc. as applicable
-7. Are at appropriate difficulty for bar examinees
+Your task is to generate ORIGINAL practice questions that COPY THE STYLE, QUESTIONING METHOD, RHYTHM, AND FORMAT of the 2025 Philippine Bar Examinations, without reproducing, paraphrasing too closely, or quoting any actual 2025 Bar question.
 
-Respond ONLY with a JSON object in this exact format (no markdown, no backticks):
+Style profile to imitate from the official 2025 Bar questionnaires:
+- Use one compact, numbered-exam style hypothetical per generated item.
+- Use neutral party labels common in the 2025 papers, such as A, B, C, X, Y, Z, ABC Corporation, XYZ Company, a city/municipality/province, an agency, or a public officer.
+- Use realistic Philippine facts, dates, local government units, courts, agencies, elections, employment, corporations, taxes, crimes, pleadings, or family/property situations, as appropriate to the subject.
+- Keep the facts direct and exam-like, usually 90 to 170 words.
+- Test one principal legal issue, with at most one closely related subsidiary issue.
+- End the question in the 2025 style, using prompts such as: "Is X correct? Reason(s).", "Will the petition prosper? Reason(s).", "Is the challenge meritorious? Reason(s).", "Decide with reason(s).", or "Will the case prosper? Reason(s)."
+- Prefer direct legal application over long issue-spotter narratives.
+- Do not use IRAC labels in the question itself.
+- Do not say that the question is AI-generated.
+
+Substantive requirements:
+- The question must be within ${state.subject}.
+- Use current Philippine law, statutes, rules, and jurisprudential doctrines where relevant.
+- Make the difficulty appropriate for a Philippine Bar examinee.
+- The generated facts must be new and not substantially similar to the official 2025 examples.
+
+Respond ONLY with a JSON object in this exact format:
 {
-  "scenario": "The factual background paragraph(s)",
-  "questions": ["Question (a) text", "Question (b) text", "Question (c) text"],
+  "scenario": "The factual background paragraph, written like a 2025 Bar hypothetical",
+  "questions": ["The direct 2025-style question ending with Reason(s). or Decide with reason(s)."],
   "topic": "Specific legal topic tested",
-  "laws": ["Relevant law 1", "Relevant law 2"],
-  "modelAnswer": "A comprehensive model answer covering all sub-questions using IRAC method, citing laws and jurisprudence"
+  "laws": ["Relevant law or doctrine 1", "Relevant law or doctrine 2"],
+  "modelAnswer": "A concise but complete suggested answer. Answer directly first, then state the rule, apply it, and conclude. Cite controlling laws, rules, and leading jurisprudential doctrines where appropriate."
 }`;
 
-      const raw = await callClaude([
-        { role: 'user', content: `Generate a Philippine Bar Examination question on ${state.subject}. Make it scenario-based like actual bar exams, referencing recent jurisprudence and statutes.` }
+      const raw = await callGroq([
+        { role: 'user', content: `Generate one original Philippine Bar practice question for ${state.subject}. Follow the 2025 Philippine Bar questionnaire style closely in structure and wording rhythm, but do not copy or paraphrase any actual 2025 question.` }
       ], systemPrompt);
 
-      // Clean and parse JSON
-      const cleaned = raw.replace(/```json|```/g, '').trim();
-      const qData = JSON.parse(cleaned);
+      const qData = parseJSONResponse(raw);
       state.currentQuestion = qData;
       state.modelAnswer = qData.modelAnswer;
 
       renderQuestion(qData);
       document.getElementById('answer-section').style.display = 'block';
-      document.getElementById('badge-type').textContent = 'Essay · ' + (qData.topic || state.subject);
+      document.getElementById('badge-type').textContent = 'Essay Â· ' + (qData.topic || state.subject);
 
     } catch (err) {
       document.getElementById('question-body').innerHTML = `
         <div style="padding: 1.5rem; color: var(--red-wrong); font-size: 0.88rem;">
           <strong>Unable to generate question.</strong> Please check your connection and try again.<br>
-          <small style="color:var(--ink-soft); font-family: monospace;">${err.message}</small>
+          <small style="color:var(--ink-soft); font-family: monospace;">${escapeHTML(err.message)}</small>
         </div>`;
     }
 
@@ -1014,20 +988,19 @@ Respond ONLY with a JSON object in this exact format (no markdown, no backticks)
   }
 
   function renderQuestion(qData) {
-    const questionsHTML = qData.questions.map((q, i) => `<li>${q}</li>`).join('');
+    const questionsHTML = (qData.questions || []).map(q => `<li>${escapeHTML(q)}</li>`).join('');
     const lawsHTML = qData.laws
-      ? qData.laws.map(l => `<span class="cited-law">${l}</span>`).join(' ')
+      ? qData.laws.map(l => `<span class="cited-law">${escapeHTML(l)}</span>`).join(' ')
       : '';
 
     document.getElementById('question-body').innerHTML = `
-      <div class="scenario-text">${qData.scenario}</div>
-      <div class="question-text">Questions:</div>
+      <div class="scenario-text">${escapeHTML(qData.scenario)}</div>
+      <div class="question-text">Question:</div>
       <ol class="question-subparts">${questionsHTML}</ol>
-      ${lawsHTML ? `<div style="margin-top:1rem; font-size:0.78rem; color:var(--ink-soft);">Relevant laws: ${lawsHTML}</div>` : ''}
+      ${lawsHTML ? `<div style="margin-top:1rem; font-size:0.78rem; color:var(--ink-soft);">Relevant laws/doctrines: ${lawsHTML}</div>` : ''}
     `;
   }
 
-  // Submit answer for analysis
   async function submitAnswer() {
     const answer = document.getElementById('answer-input').value.trim();
     if (!answer || answer.length < 30) {
@@ -1041,13 +1014,13 @@ Respond ONLY with a JSON object in this exact format (no markdown, no backticks)
 
     const btn = document.getElementById('btn-submit');
     btn.disabled = true;
-    btn.textContent = 'Analyzing…';
+    btn.textContent = 'Analyzing...';
 
     document.getElementById('feedback-section').innerHTML = `
       <div class="feedback-card">
         <div class="loading-wrap">
           <div class="spinner"></div>
-          <span>Analyzing your answer against Philippine law and jurisprudence…</span>
+          <span>Analyzing your answer against Philippine law and bar-exam standards...</span>
         </div>
       </div>`;
 
@@ -1055,18 +1028,17 @@ Respond ONLY with a JSON object in this exact format (no markdown, no backticks)
       const systemPrompt = `You are a seasoned Philippine Bar Examinations reviewer and law professor. You analyze examinees' answers with precision, fairness, and deep knowledge of Philippine law.
 
 Evaluate the answer based on:
-1. Correct identification of the legal issues
-2. Accurate citation of applicable laws and the Philippine Constitution
-3. Proper application of jurisprudence (Supreme Court decisions)
-4. Logical IRAC structure (Issue, Rule, Application, Conclusion)
-5. Completeness in addressing all sub-questions
-6. Precision of legal language
+1. Correct identification of the legal issue
+2. Accurate citation of applicable law, rules, and constitutional provisions
+3. Proper use of jurisprudential doctrines
+4. Direct answer and reasoned application to the facts
+5. Completeness and precision of legal language
 
-Respond ONLY with a JSON object (no markdown, no backticks):
+Respond ONLY with a JSON object:
 {
   "score": 85,
   "grade": "excellent|good|partial|poor",
-  "headline": "Short assessment headline (e.g., 'Strong constitutional analysis with minor gaps')",
+  "headline": "Short assessment headline",
   "strengths": ["Point 1", "Point 2", "Point 3"],
   "weaknesses": ["Gap 1", "Gap 2"],
   "suggestions": "2-3 sentences on how to improve",
@@ -1078,7 +1050,7 @@ Grade thresholds: excellent = 80-100, good = 65-79, partial = 40-64, poor = 0-39
 
       const contextMsg = `QUESTION:
 Scenario: ${state.currentQuestion.scenario}
-Questions: ${state.currentQuestion.questions.join(' | ')}
+Question: ${(state.currentQuestion.questions || []).join(' | ')}
 
 EXAMINEE'S ANSWER:
 ${answer}
@@ -1088,11 +1060,9 @@ ${state.modelAnswer}
 
 Evaluate the examinee's answer.`;
 
-      const raw = await callClaude([{ role: 'user', content: contextMsg }], systemPrompt);
-      const cleaned = raw.replace(/```json|```/g, '').trim();
-      const result = JSON.parse(cleaned);
+      const raw = await callGroq([{ role: 'user', content: contextMsg }], systemPrompt);
+      const result = parseJSONResponse(raw);
 
-      // Update stats
       state.attempted++;
       state.totalScore += result.score || 0;
       if (result.grade === 'excellent') state.excellent++;
@@ -1104,7 +1074,7 @@ Evaluate the examinee's answer.`;
       document.getElementById('feedback-section').innerHTML = `
         <div class="feedback-card">
           <div style="padding: 1.5rem; color: var(--red-wrong); font-size: 0.88rem;">
-            <strong>Analysis failed.</strong> ${err.message}
+            <strong>Analysis failed.</strong> ${escapeHTML(err.message)}
           </div>
         </div>`;
     }
@@ -1126,23 +1096,23 @@ Evaluate the examinee's answer.`;
 
     const strengthsHTML = (result.strengths || []).map(s => `
       <div class="key-point">
-        <div class="key-point-icon icon-check">✓</div>
-        <span>${s}</span>
+        <div class="key-point-icon icon-check">âœ“</div>
+        <span>${escapeHTML(s)}</span>
       </div>`).join('');
 
     const weaknessesHTML = (result.weaknesses || []).map(w => `
       <div class="key-point">
-        <div class="key-point-icon icon-cross">✗</div>
-        <span>${w}</span>
+        <div class="key-point-icon icon-cross">âœ—</div>
+        <span>${escapeHTML(w)}</span>
       </div>`).join('');
 
-    const missingHTML = (result.missingCitations || []).map(c => `<span class="cited-law">${c}</span>`).join(' ');
+    const missingHTML = (result.missingCitations || []).map(c => `<span class="cited-law">${escapeHTML(c)}</span>`).join(' ');
 
     document.getElementById('feedback-section').innerHTML = `
       <div class="feedback-card">
-        <div class="feedback-header ${grade}">
-          <div class="feedback-title">${gradeLabels[grade] || 'Feedback'}</div>
-          <span class="score-pill ${grade}">${score}/100 — ${result.headline || ''}</span>
+        <div class="feedback-header ${escapeHTML(grade)}">
+          <div class="feedback-title">${escapeHTML(gradeLabels[grade] || 'Feedback')}</div>
+          <span class="score-pill ${escapeHTML(grade)}">${escapeHTML(score)}/100 - ${escapeHTML(result.headline || '')}</span>
         </div>
         <div class="feedback-body">
           ${strengthsHTML || weaknessesHTML ? `
@@ -1155,7 +1125,7 @@ Evaluate the examinee's answer.`;
           ${result.suggestions ? `
           <div class="feedback-section">
             <div class="feedback-section-title">How to Improve</div>
-            <p class="feedback-text">${result.suggestions}</p>
+            <p class="feedback-text">${escapeHTML(result.suggestions)}</p>
           </div>` : ''}
 
           ${missingHTML ? `
@@ -1166,7 +1136,7 @@ Evaluate the examinee's answer.`;
 
           <div class="feedback-section">
             <div class="feedback-section-title">Model Answer</div>
-            <div class="model-answer">${(state.modelAnswer || '').replace(/\n/g, '<br>')}</div>
+            <div class="model-answer">${escapeHTML(state.modelAnswer || '').replace(/\n/g, '<br>')}</div>
           </div>
         </div>
       </div>`;
@@ -1186,7 +1156,7 @@ Evaluate the examinee's answer.`;
         <div class="feedback-body">
           <div class="feedback-section">
             <div class="feedback-section-title">Suggested Answer</div>
-            <div class="model-answer">${state.modelAnswer.replace(/\n/g, '<br>')}</div>
+            <div class="model-answer">${escapeHTML(state.modelAnswer).replace(/\n/g, '<br>')}</div>
           </div>
         </div>
       </div>`;
@@ -1195,7 +1165,7 @@ Evaluate the examinee's answer.`;
   function updateStats() {
     document.getElementById('stat-attempted').textContent = state.attempted;
     document.getElementById('stat-excellent').textContent = state.excellent;
-    const rate = state.attempted > 0 ? Math.round(state.totalScore / state.attempted) + '%' : '—';
+    const rate = state.attempted > 0 ? Math.round(state.totalScore / state.attempted) + '%' : 'â€”';
     document.getElementById('stat-rate').textContent = rate;
     const pct = state.attempted > 0 ? Math.round((state.excellent / state.attempted) * 100) : 0;
     document.getElementById('progress-bar').style.width = pct + '%';
@@ -1208,11 +1178,8 @@ Evaluate the examinee's answer.`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   }
+
+  updateKeyStatus();
 </script>
-
-<!-- Groq API hardcoded — no key modal needed -->
-
-<script>updateKeyStatus();</script>
-
 </body>
 </html>
